@@ -1,15 +1,56 @@
-import React from 'react';
+import React, { useState,useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Box,Container,Grid,Typography,Button,FormControl,TextField } from "@mui/material";
+import { Link,useNavigate } from 'react-router-dom';
+import { Box,Container,Grid,Typography,Button,FormControl,TextField,InputAdornment,IconButton } from "@mui/material";
 import LoginImage from "../../Resources/Images/Login/login.png";
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { login } from "../../Redux/Action/User";
 const Login = () => {
+    const [ showPassword,setShowPassword ] = useState(false);
+    const [ message,setMessage ] = useState("");
+    const [ values, setValues ] = useState({
+        userName:"",
+        password:""
+    });
+    const dispatch = useDispatch();
+    let navigate = useNavigate();
+    const handleChange = (e,v) => {
+        setValues({ ...values, [v]: e.target.value })
+        // console.log(e.target.value)
+    }
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if(values.userName.length < 8 && values.password.length < 12){
+            setMessage("Please Check Login Credentials (Login and Password)")
+        }else if(values.userName.length < 8){
+            setMessage("User Name is mandatory field!");
+        }else if(values.password.length < 12){
+            setMessage("Password is mandatory field!");
+        }
+        dispatch(login(values)).then((response) => {
+            if(response.payload.loginSuccess){
+                setMessage(response.payload.message);
+                navigate("/dashboard",{replace:true});
+            }else{
+                setMessage(response.payload.message);
+                navigate("/",{replace:true});
+            }
+        }).catch((err) => {console.log(err)})
+    }
+    const handleValidForm = useMemo(() => {
+        return values.userName.length > 8 && values.password.length > 11;
+    },[values])
     return (
         <>
-            <Box sx={{display:"flex",bgcolor:"#f8fafb",mb:5,pb:5}}>
-                <Container fixed sx={{mt:8}}>
-                    <Grid container>
+            <Box sx={{display:"flex",bgcolor:"#f8fafb",height:`${window.innerHeight}px`,overflow:"hidden"}}>
+                <Container fixed>
+                    <Grid container sx={{pt:12}}>
                         <Grid item xs={12} md={7}>
                             <img src={LoginImage} className="img-fluid" alt="Login Images"/>
                         </Grid>
@@ -18,7 +59,7 @@ const Login = () => {
                             <Typography className="text-muted" variant="subtitle1" gutterBottom component="div" sx={{mb:4}}>
                                 To keep connected with us please login with your personal information by username and password <NotificationsSharpIcon fontSize="large" htmlColor="#ff9800"/>
                             </Typography>
-                            <Box component="form" autoComplete="off" encType="multipart/form-data" onSubmit={() => {console.log("Form Submit")}}>
+                            <Box component="form" autoComplete="off" encType="multipart/form-data" onSubmit={(event) => handleSubmit(event)}>
                                 <FormControl fullWidth margin="dense" variant="outlined">
                                     <TextField
                                         name="userName"
@@ -26,7 +67,9 @@ const Login = () => {
                                         required
                                         type="text"
                                         label="User Name"
-                                        value=""
+                                        value={values.userName || ""}
+                                        onChange={(e) => handleChange(e,"userName")}
+                                        helperText={message}
                                     />
                                 </FormControl>
                                 <FormControl fullWidth margin="dense" variant="outlined">
@@ -34,15 +77,30 @@ const Login = () => {
                                         name="password"
                                         id="password"
                                         required
-                                        type="password"
+                                        type={showPassword ? "text":"password"}
                                         label="Password"
-                                        value=""
+                                        value={values.password || ""}
+                                        onChange={(e) => handleChange(e,"password")}
+                                        helperText={message}
+                                        InputProps={{
+                                            endAdornment:(
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={handleClickShowPassword}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
                                 </FormControl>
                                 <Box sx={{display:"flex",justifyContent:"end"}}>
                                     <Typography className="text-muted" variant="subtitle1" gutterBottom component="div" sx={{mt:1}}><Link to={"/forget_password"}style={{textDecoration:"none",color:"inherit"}}>Forget Password ?</Link></Typography>
                                 </Box>
-                                <Button type="submit" variant="contained" size="large">Login</Button>
+                                <Button type='submit' variant="contained" size="large" disabled={!handleValidForm}>Login</Button>
                             </Box>
                         </Grid>
                     </Grid>

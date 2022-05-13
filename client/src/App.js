@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import { Routes,Route,useLocation } from "react-router-dom";
-import { RequireAuth } from "./Protected";
+import Protected from './Protected';
 import Public from './Layout/Public';
 import User from "./Layout/User";
 import Login from './Component/Login';
@@ -14,9 +14,7 @@ const App = () => {
     <Routes>
         <Route element={ <Public/>}>
           <Route path={"/"} element={<Login/>} />
-          <Route element={<User/>}>
-            <Route path={"/dashboard"} element={ <RequireAuth><Dashboard/></RequireAuth> }/>
-          </Route>
+          <Route path={"/dashboard"} element={<Protected ComposedClass={Dashboard} reload={true} adminRoute={false}/>}/>
         </Route>
     </Routes>
   );

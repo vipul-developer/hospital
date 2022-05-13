@@ -6,6 +6,7 @@ const multer = require("multer");
 const mongoose = require("mongoose");
 var MongoDBStore = require('connect-mongodb-session')(session);
 require("dotenv").config();
+const url = 'mongodb+srv://josh:*******@cluster0.cwv6f.mongodb.net/Unionise?retryWrites=true&w=majority';
 
 //==========================================
 //========== EXPRESS INIT START ============
@@ -44,7 +45,8 @@ store.on('error', function(error) {
 app.use(require('express-session')({
     secret: 'This is a secret',
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 2 // 1 day
+        expires: new Date(Date.now() + 3600000),
+        // maxAge: 1000 * 60 * 60 * 24 * 2 // 1 day
         // maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
         // maxAge:36000
     },

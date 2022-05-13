@@ -4,7 +4,6 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
 import { BrowserRouter } from "react-router-dom";
 import App from './App';
-import { AuthProvider } from "./Protected";
 import reportWebVitals from './reportWebVitals';
 import { Provider } from "react-redux";
 import { createStore,applyMiddleware } from "redux";
@@ -17,9 +16,7 @@ root.render(
   <React.StrictMode>
     <Provider store={createStoreWithMiddleware(Reducer,window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())}>
         <BrowserRouter>
-          <AuthProvider>
             <App />
-          </AuthProvider>
         </BrowserRouter>
     </Provider>
   </React.StrictMode>
