@@ -15,7 +15,7 @@ const Protected = (props) => {
   if(user){
     if(!user.isAuth){
       if(reload){
-        return <Navigate to="/" state={{ from: location }} replace />;
+        return <Navigate to="/login" state={{ from: location }} replace />;
       }
     }else{
       if(adminRoute && !user.isAdmin){

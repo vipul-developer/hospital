@@ -1,8 +1,12 @@
 import React from 'react';
-const User = (props) => {
+import { Outlet } from 'react-router-dom';
+import Header from "../../Component/Navigation/Header";
+const User = () => {
     return (
         <>
-            {props.children}
+            <Header>
+                <Outlet/>
+            </Header>
         </>
     );
 };

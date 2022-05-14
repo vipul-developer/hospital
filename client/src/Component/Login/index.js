@@ -26,20 +26,13 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(values.userName.length < 8 && values.password.length < 12){
-            setMessage("Please Check Login Credentials (Login and Password)")
-        }else if(values.userName.length < 8){
-            setMessage("User Name is mandatory field!");
-        }else if(values.password.length < 12){
-            setMessage("Password is mandatory field!");
-        }
         dispatch(login(values)).then((response) => {
             if(response.payload.loginSuccess){
                 setMessage(response.payload.message);
                 navigate("/dashboard",{replace:true});
             }else{
                 setMessage(response.payload.message);
-                navigate("/",{replace:true});
+                navigate("/login",{replace:true});
             }
         }).catch((err) => {console.log(err)})
     }

@@ -45,8 +45,8 @@ store.on('error', function(error) {
 app.use(require('express-session')({
     secret: 'This is a secret',
     cookie: {
-        expires: new Date(Date.now() + 3600000),
-        // maxAge: 1000 * 60 * 60 * 24 * 2 // 1 day
+        // expires: new Date(Date.now() + 3600000),
+        maxAge: 1000 * 60 * 60 * 24 * 2 // 1 day
         // maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
         // maxAge:36000
     },
