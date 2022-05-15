@@ -10,15 +10,15 @@ const Header = (props) => {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
-    const handleDrawer = () => {
-        setOpen(!open);
-    };
-    const handleOpenUserMenu = (event) => {
+    const handleDrawer = React.useCallback(() => {
+        setOpen(prevCheck => !prevCheck);
+    },[]);
+    const handleOpenUserMenu = React.useCallback((event) => {
         setAnchorElUser(event.currentTarget);
-    };
-    const handleCloseUserMenu = () => {
+    },[]);
+    const handleCloseUserMenu = React.useCallback(() => {
         setAnchorElUser(null);
-    };
+    },[]);
     return (
         <Box sx={{display:"flex"}}>
             <AppBar 
